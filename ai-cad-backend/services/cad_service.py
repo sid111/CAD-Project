@@ -1,29 +1,45 @@
-# services/cad_service.py
-import io
-import zipfile
 import trimesh
+import zipfile
+import io
 import plotly.graph_objects as go
 
-def create_cube(size=20.0):
-    return trimesh.creation.box(extents=(size, size, size))
+def generate_mesh(prompt: str):
+    """
+    Generate a mesh from a text prompt.
+    Right now it always makes a cube as a placeholder.
+    """
+    mesh = trimesh.creation.box(extents=(20, 20, 20))
+    return mesh
 
-def render_mesh_png(mesh):
+def render_mesh(mesh):
     vertices = mesh.vertices
     faces = mesh.faces
-    x, y, z = vertices[:,0], vertices[:,1], vertices[:,2]
-    i, j, k = faces[:,0], faces[:,1], faces[:,2]
+
+    x, y, z = vertices[:, 0], vertices[:, 1], vertices[:, 2]
+    i, j, k = faces[:, 0], faces[:, 1], faces[:, 2]
 
     fig = go.Figure(
-        data=[go.Mesh3d(x=x, y=y, z=z, i=i, j=j, k=k, opacity=0.7)]
+        data=[
+            go.Mesh3d(
+                x=x, y=y, z=z,
+                i=i, j=j, k=k,
+                color="lightblue",
+                opacity=0.5,
+            )
+        ]
     )
-    fig.update_layout(scene=dict(xaxis_visible=True, yaxis_visible=True, zaxis_visible=True),
-                      width=700, height=600)
-    return fig.to_image(format="png", engine="kaleido")
+    return fig
 
-def export_zip(mesh, png_bytes):
-    buf = io.BytesIO()
-    with zipfile.ZipFile(buf, "w") as zf:
-        zf.writestr("model.stl", mesh.export(file_type="stl"))
+def export_zip(mesh, fig):
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w") as zf:
+        # STL file
+        stl_bytes = mesh.export(file_type="stl")
+        zf.writestr("model.stl", stl_bytes)
+
+        # PNG preview
+        png_bytes = fig.to_image(format="png")
         zf.writestr("preview.png", png_bytes)
-    buf.seek(0)
-    return buf
+
+    buffer.seek(0)
+    return buffer

@@ -1,15 +1,6 @@
-fastapi==0.115.0
-uvicorn[standard]==0.30.0
-
-# CAD & 3D
-trimesh==4.4.0
-shapely==2.0.5
-pythreejs==2.4.2
-
-# Visualization
-plotly==5.24.0
-kaleido==0.2.1   # Needed for saving Plotly figures as PNG
-
-# Utilities
-numpy==1.26.4
-pydantic==2.9.2
+fastapi==0.100.0
+uvicorn==0.23.2
+trimesh==4.8.2
+plotly==6.3.0
+numpy==1.25.2
+python-dotenv==1.0.1
