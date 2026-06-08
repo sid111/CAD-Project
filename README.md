@@ -48,5 +48,5 @@ The system then:
 
 1. Clone repo:
    ```bash
-   git clone https://github.com/your-username/ai-cad-generator.git
+   git clone https://github.com/sid111/ai-cad-generator.git
    cd ai-cad-generator
